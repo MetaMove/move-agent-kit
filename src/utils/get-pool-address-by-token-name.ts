@@ -101,9 +101,14 @@ export const tokensList = [
 
 export const getTokenByTokenName = (name: string) => {
 	const token = tokensList.find(
-		(token) => token.name.toLowerCase() === name.toLowerCase() || token.name.includes(name.toLowerCase())
+		(token) => token.name.toLowerCase() === name.toLowerCase() || token.name.toLowerCase().includes(name.toLowerCase())
 	)
 
-	if (!token) throw new Error("Token not found")
+	return token
+}
+
+export const getTokenByTokenAddress = (address: string) => {
+	const token = tokensList.find((token) => token.tokenAddress.toLowerCase() === address.toLowerCase())
+
 	return token
 }

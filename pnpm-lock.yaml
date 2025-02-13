@@ -47,6 +47,22 @@ importers:
       zod:
         specifier: ^3.24.1
         version: 3.24.2
+    optionalDependencies:
+      '@rollup/rollup-linux-arm64-gnu':
+        specifier: 4.18.1
+        version: 4.18.1
+      '@rollup/rollup-linux-x64-gnu':
+        specifier: ^4.18.1
+        version: 4.34.6
+      '@rollup/rollup-linux-x64-musl':
+        specifier: ^4.18.1
+        version: 4.34.6
+      '@rollup/rollup-win32-arm64-msvc':
+        specifier: 4.18.1
+        version: 4.18.1
+      '@rollup/rollup-win32-x64-msvc':
+        specifier: 4.18.1
+        version: 4.18.1
     devDependencies:
       '@arethetypeswrong/cli':
         specifier: ^0.17.3
@@ -69,22 +85,6 @@ importers:
       typescript:
         specifier: ^5.7.3
         version: 5.7.3
-    optionalDependencies:
-      '@rollup/rollup-linux-arm64-gnu':
-        specifier: 4.18.1
-        version: 4.18.1
-      '@rollup/rollup-linux-x64-gnu':
-        specifier: ^4.18.1
-        version: 4.34.6
-      '@rollup/rollup-linux-x64-musl':
-        specifier: ^4.18.1
-        version: 4.34.6
-      '@rollup/rollup-win32-arm64-msvc':
-        specifier: 4.18.1
-        version: 4.18.1
-      '@rollup/rollup-win32-x64-msvc':
-        specifier: 4.18.1
-        version: 4.18.1
 
 packages:
 

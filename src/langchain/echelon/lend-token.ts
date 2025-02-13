@@ -1,19 +1,21 @@
-import { convertAmountFromHumanReadableToOnChain } from "@aptos-labs/ts-sdk"
+import { type MoveStructId, convertAmountFromHumanReadableToOnChain } from "@aptos-labs/ts-sdk"
 import { Tool } from "langchain/tools"
 import { type AgentRuntime, parseJson } from "../.."
+import { getTokenByTokenAddress, getTokenByTokenName } from "../../utils/get-pool-address-by-token-name"
 
 export class EchelonLendTokenTool extends Tool {
 	name = "echelon_lend_token"
 	description = `this tool can be used to lend APT, tokens or fungible asset to a position
 
-  if you want to lend APT, mint will be "0x1::aptos_coin::AptosCoin"
-  if there is no mint given by the user, only send the name of the token and keep mint blank
+    if you want to lend APT, mint will be "0x1::aptos_coin::AptosCoin"
+    if user added mint as asset name, and you don't have the address of the asset, you can use the following token names:
+    ['usdt', 'zusdt', 'zusdc', 'apt', 'sthapt', 'mod', 'thl', 'wusdc' , 'zweth', 'wweth', 'cake', 'stapt', 'abtc', 'stone' , 'truapt', 'sbtc']
+    or whatever name the user has provided, you can use the token name to get the address of the token
 
-  Inputs ( input is a JSON string ):
-  name: string, eg "USDT" (required)
-  amount: number, eg 1 or 0.01 (required)
-  mint: string, eg "0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa::asset::USDT" (optional)
-  `
+    Inputs ( input is a JSON string ) (IMPORTANT):
+    amount: number, eg 1 or 0.01 (required)
+    mint: string, eg "0xf22bede237a07e121b56d91a491eb7bcdfd1f5907926a9e58338f964a01b17fa::asset::USDT" or "usdt (name of the token)" (required)
+    `
 
 	constructor(private agent: AgentRuntime) {
 		super()
@@ -23,14 +25,16 @@ export class EchelonLendTokenTool extends Tool {
 		try {
 			const parsedInput = parseJson(input)
 
-			const token = this.agent.getTokenByTokenName(parsedInput.name)
+			const token = getTokenByTokenName(parsedInput.mint) || getTokenByTokenAddress(parsedInput.mint)
 
-			const mint = parsedInput.mint || token.tokenAddress || "0x1::aptos_coin::AptosCoin"
+			if (!token) throw new Error("Token not found")
 
-			const mintDetail = await this.agent.getTokenDetails(mint)
+			const mintDetail = await this.agent.getTokenDetails(token.tokenAddress)
+
+			console.log("mintDetail", mintDetail)
 
 			const lendTokenTransactionHash = await this.agent.lendTokenWithEchelon(
-				mint,
+				token.tokenAddress as MoveStructId,
 				convertAmountFromHumanReadableToOnChain(parsedInput.amount, mintDetail.decimals || 8),
 				token.poolAddress,
 				token.tokenAddress.split("::").length !== 3
@@ -40,8 +44,8 @@ export class EchelonLendTokenTool extends Tool {
 				status: "success",
 				lendTokenTransactionHash,
 				token: {
-					name: mintDetail.name,
-					decimals: mintDetail.decimals,
+					name: mintDetail.name || "APT",
+					decimals: mintDetail.decimals || 8,
 				},
 			})
 		} catch (error: any) {

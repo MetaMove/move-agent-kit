@@ -13,18 +13,28 @@ import type { AgentRuntime } from "../../agent"
  */
 export async function getPoolDetails(agent: AgentRuntime, mint: string): Promise<any> {
 	try {
-		const transaction = await agent.aptos.view({
-			payload: {
-				function: "0x2fe576faa841347a9b1b32c869685deb75a15e3f62dfe37cbd6d52cc403a16f6::pool::pool_details",
-				functionArguments: [mint],
-			},
-		})
+		const allPoolDetailsResponse = await fetch("https://price-api.joule.finance/api/market")
 
-		if (!transaction) {
-			throw new Error("Failed to fetch pool details")
+		const allPoolDetails = await allPoolDetailsResponse.json()
+
+		const poolDetail = allPoolDetails.data.find((pool: any) => pool.asset.type.includes(mint))
+
+		if (!poolDetail) {
+			throw new Error("Pool not found")
 		}
 
-		return transaction
+		return {
+			assetName: poolDetail.asset.assetName,
+			tokenAddress: mint,
+			ltv: poolDetail.ltv,
+			decimals: poolDetail.asset.decimals,
+			marketSize: Number(poolDetail.marketSize) / poolDetail.asset.decimals,
+			totalBorrowed: Number(poolDetail.totalBorrowed) / poolDetail.asset.decimals,
+			depositApy: poolDetail.depositApy,
+			extraDepositApy: poolDetail.extraAPY.depositAPY,
+			borrowApy: poolDetail.borrowApy,
+			price: poolDetail.priceInfo.price,
+		}
 	} catch (error: any) {
 		throw new Error(`Failed to get pool details: ${error.message}`)
 	}
