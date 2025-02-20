@@ -9,6 +9,7 @@ export type ToolsNameList =
 	| "aptos_token_details"
 	| "aptos_mint_token"
 	| "aptos_create_token"
+	| "aptos_token_price"
 	| "amnis_stake"
 	| "amnis_withdraw_stake"
 	| "joule_lend_token"
