@@ -16,9 +16,7 @@ export class LocalSigner extends BaseSigner {
 			transaction,
 		})
 
-		return {
-			senderAuthenticator,
-		}
+		return senderAuthenticator
 	}
 
 	async sendTransaction(transaction: AnyRawTransaction) {
@@ -26,7 +24,7 @@ export class LocalSigner extends BaseSigner {
 
 		const submittedTx = await this.aptos.transaction.submit.simple({
 			transaction,
-			senderAuthenticator: signedTx.senderAuthenticator,
+			senderAuthenticator: signedTx,
 		})
 
 		const result = await this.aptos.waitForTransaction({

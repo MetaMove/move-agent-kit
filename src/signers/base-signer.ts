@@ -1,8 +1,11 @@
 // src/signers/base-signer.ts
 
-import type { Account, AccountAddress, AnyRawTransaction, Aptos } from "@aptos-labs/ts-sdk"
-import type { InputTransactionData, SignMessagePayload, SignMessageResponse } from "@aptos-labs/wallet-adapter-react"
-import type { SignedTransactionResponse } from "../types"
+import type { Account, AccountAddress, AccountAuthenticator, AnyRawTransaction, Aptos } from "@aptos-labs/ts-sdk"
+import type {
+	AptosSignMessageInput,
+	AptosSignMessageOutput,
+	InputTransactionData,
+} from "@aptos-labs/wallet-adapter-react"
 
 export abstract class BaseSigner {
 	protected constructor(
@@ -15,7 +18,7 @@ export abstract class BaseSigner {
 	}
 
 	//  abstract getAccount(): Account;
-	abstract signTransaction(transaction: AnyRawTransaction): Promise<SignedTransactionResponse>
+	abstract signTransaction(transaction: AnyRawTransaction): Promise<AccountAuthenticator>
 	abstract sendTransaction(transaction: InputTransactionData | AnyRawTransaction): Promise<string>
-	abstract signMessage(message: SignMessagePayload | string): Promise<SignMessageResponse | string>
+	abstract signMessage(message: AptosSignMessageInput | string): Promise<AptosSignMessageOutput | string>
 }

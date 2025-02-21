@@ -1,5 +1,12 @@
-import { type Account, AccountAddress, type AnyRawTransaction, Aptos, AptosConfig, Network } from "@aptos-labs/ts-sdk"
-import type { InputTransactionData, SignMessagePayload, WalletContextState } from "@aptos-labs/wallet-adapter-react"
+import {
+	type Account,
+	type AccountAddress,
+	type AnyRawTransaction,
+	Aptos,
+	AptosConfig,
+	Network,
+} from "@aptos-labs/ts-sdk"
+import type { AptosSignMessageInput, InputTransactionData, WalletContextState } from "@aptos-labs/wallet-adapter-react"
 import { BaseSigner } from "./base-signer"
 
 export class WalletSigner extends BaseSigner {
@@ -15,14 +22,14 @@ export class WalletSigner extends BaseSigner {
 
 	public override getAddress(): AccountAddress {
 		const walletAddress = this.wallet?.account?.address
-		return walletAddress ? AccountAddress.fromString(walletAddress) : this.account.accountAddress
+		return walletAddress ?? this.account.accountAddress
 	}
 
 	async signTransaction(transaction: AnyRawTransaction) {
-		const senderAuthenticator = await this.wallet.signTransaction(transaction)
-		return {
-			senderAuthenticator,
-		}
+		const senderAuthenticator = await this.wallet.signTransaction({
+			transactionOrPayload: transaction,
+		})
+		return senderAuthenticator.authenticator
 	}
 
 	async sendTransaction(transaction: InputTransactionData): Promise<string> {
@@ -31,7 +38,7 @@ export class WalletSigner extends BaseSigner {
 		return txHash.hash
 	}
 
-	async signMessage(message: SignMessagePayload) {
+	async signMessage(message: AptosSignMessageInput) {
 		return this.wallet.signMessage(message)
 	}
 }
