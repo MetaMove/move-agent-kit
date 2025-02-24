@@ -4,7 +4,6 @@ import {
 	convertAmountFromHumanReadableToOnChain,
 } from "@aptos-labs/ts-sdk"
 import type { AgentRuntime } from "../../agent"
-
 /**
  * Transfer APT, tokens or fungible asset to a recipient
  * @param agent MoveAgentKit instance
@@ -30,7 +29,6 @@ export async function transferTokens(
 		typeArguments: [mint],
 		functionArguments: [to.toString(), amount],
 	}
-
 	const FUNGIBLE_ASSET_DATA: InputGenerateTransactionPayloadData = {
 		function: "0x1::primary_fungible_store::transfer",
 		typeArguments: ["0x1::fungible_asset::Metadata"],
@@ -38,22 +36,18 @@ export async function transferTokens(
 	}
 
 	try {
-		const transaction = await agent.aptos.transaction.build.simple({
+		const committedTransactionHash = await agent.account.sendTransaction({
 			sender: agent.account.getAddress(),
 			data: mint.split("::").length === 3 ? COIN_STANDARD_DATA : FUNGIBLE_ASSET_DATA,
 		})
 
-		const committedTransactionHash = await agent.account.sendTransaction(transaction)
-
 		const signedTransaction = await agent.aptos.waitForTransaction({
 			transactionHash: committedTransactionHash,
 		})
-
 		if (!signedTransaction.success) {
 			console.error(signedTransaction, "Token transfer failed")
 			throw new Error("Token transfer failed")
 		}
-
 		return signedTransaction.hash
 	} catch (error: any) {
 		throw new Error(`Token transfer failed: ${error.message}`)
