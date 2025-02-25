@@ -10,7 +10,7 @@ import type { AgentRuntime } from "../../agent"
  */
 export async function createPool(agent: AgentRuntime, mintX: MoveStructId, mintY: MoveStructId): Promise<string> {
 	try {
-		const transaction = await agent.aptos.transaction.build.simple({
+		const committedTransactionHash = await agent.account.sendTransaction({
 			sender: agent.account.getAddress(),
 			data: {
 				function: "0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::scripts_v2::register_pool",
@@ -22,8 +22,6 @@ export async function createPool(agent: AgentRuntime, mintX: MoveStructId, mintY
 				functionArguments: [],
 			},
 		})
-
-		const committedTransactionHash = await agent.account.sendTransaction(transaction)
 
 		const signedTransaction = await agent.aptos.waitForTransaction({
 			transactionHash: committedTransactionHash,

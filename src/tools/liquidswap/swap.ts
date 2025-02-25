@@ -18,7 +18,7 @@ export async function swap(
 	minCoinOut = 0
 ): Promise<string> {
 	try {
-		const transaction = await agent.aptos.transaction.build.simple({
+		const committedTransactionHash = await agent.account.sendTransaction({
 			sender: agent.account.getAddress(),
 			data: {
 				function: "0x190d44266241744264b964a37b8f09863167a12d3e70cda39376cfb4e3561e12::scripts_v2::swap",
@@ -30,8 +30,6 @@ export async function swap(
 				functionArguments: [swapAmount, minCoinOut],
 			},
 		})
-
-		const committedTransactionHash = await agent.account.sendTransaction(transaction)
 
 		const signedTransaction = await agent.aptos.waitForTransaction({
 			transactionHash: committedTransactionHash,
