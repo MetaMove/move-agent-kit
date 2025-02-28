@@ -18,7 +18,7 @@ export async function addLiquidityWithThala(
 	mintYAmount: number
 ): Promise<string> {
 	try {
-		const transaction = await agent.aptos.transaction.build.simple({
+		const committedTransactionHash = await agent.account.sendTransaction({
 			sender: agent.account.getAddress(),
 			data: {
 				function:
@@ -36,8 +36,6 @@ export async function addLiquidityWithThala(
 				functionArguments: [mintXAmount, mintYAmount, 0, 0, 0, 0, 0, 0],
 			},
 		})
-
-		const committedTransactionHash = await agent.account.sendTransaction(transaction)
 
 		const signedTransaction = await agent.aptos.waitForTransaction({
 			transactionHash: committedTransactionHash,

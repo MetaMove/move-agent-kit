@@ -16,7 +16,7 @@ export async function removeLiquidityWithThala(
 	lpAmount: number
 ): Promise<string> {
 	try {
-		const transaction = await agent.aptos.transaction.build.simple({
+		const committedTransactionHash = await agent.account.sendTransaction({
 			sender: agent.account.getAddress(),
 			data: {
 				function:
@@ -34,8 +34,6 @@ export async function removeLiquidityWithThala(
 				functionArguments: [lpAmount, 0, 0, 0, 0],
 			},
 		})
-
-		const committedTransactionHash = await agent.account.sendTransaction(transaction)
 
 		const signedTransaction = await agent.aptos.waitForTransaction({
 			transactionHash: committedTransactionHash,
