@@ -22,7 +22,7 @@ export async function swapWithPanora(
 			fromTokenAddress: fromToken,
 			toTokenAddress: toToken,
 			fromTokenAmount: swapAmount.toString(),
-			toWalletAddress: toWalletAddress ? toWalletAddress : agent.account.getAddress().toString(),
+			toWalletAddress: toWalletAddress ? toWalletAddress : agent.account.getAddress().toString().toString(),
 		}
 
 		const url = `https://api.panora.exchange/swap?${new URLSearchParams(panoraParameters).toString()}`
@@ -49,16 +49,14 @@ export async function swapWithPanora(
 
 		const transactionData = response.quotes[0].txData
 
-		const transaction = await agent.aptos.transaction.build.simple({
-			sender: agent.account.getAddress(),
+		const committedTransactionHash = await agent.account.sendTransaction({
+			sender: agent.account.getAddress().toString(),
 			data: {
 				function: transactionData.function,
 				typeArguments: transactionData.type_arguments,
 				functionArguments: transactionData.arguments,
 			},
 		})
-
-		const committedTransactionHash = await agent.account.sendTransaction(transaction)
 
 		const signedTransaction = await agent.aptos.waitForTransaction({
 			transactionHash: committedTransactionHash,

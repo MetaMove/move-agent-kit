@@ -24,7 +24,7 @@ export class JouleGetUserPosition extends Tool {
 		try {
 			const parsedInput = parseJson(input)
 
-			const userAddress = AccountAddress.from(parsedInput.userAddress) || this.agent.account.getAddress()
+			const userAddress = AccountAddress.from(parsedInput.userAddress) || this.agent.account.getAddress().toString()
 
 			const jouleUserPosition = await this.agent.getUserPosition(userAddress, parsedInput.positionId)
 

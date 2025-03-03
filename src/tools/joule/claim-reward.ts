@@ -15,19 +15,7 @@ export async function claimReward(agent: AgentRuntime, rewardCoinType: MoveStruc
 			rewardCoinType === "0x111ae3e5bc816a5e63c2da97d0aa3886519e0cd5e4b046659fa35796bd11542a::stapt_token::StakedApt"
 
 		console.log({
-			sender: agent.account.getAddress(),
-			data: {
-				function: "0x2fe576faa841347a9b1b32c869685deb75a15e3f62dfe37cbd6d52cc403a16f6::pool::claim_rewards",
-				typeArguments: [
-					isCoinTypeSTApt
-						? "0x111ae3e5bc816a5e63c2da97d0aa3886519e0cd5e4b046659fa35796bd11542a::amapt_token::AmnisApt"
-						: "0x1::aptos_coin::AptosCoin",
-				],
-				functionArguments: [coinReward, isCoinTypeSTApt ? "amAPTIncentives" : "APTIncentives"],
-			},
-		})
-		const transaction = await agent.aptos.transaction.build.simple({
-			sender: agent.account.getAddress(),
+			sender: agent.account.getAddress().toString(),
 			data: {
 				function: "0x2fe576faa841347a9b1b32c869685deb75a15e3f62dfe37cbd6d52cc403a16f6::pool::claim_rewards",
 				typeArguments: [
@@ -39,7 +27,18 @@ export async function claimReward(agent: AgentRuntime, rewardCoinType: MoveStruc
 			},
 		})
 
-		const committedTransactionHash = await agent.account.sendTransaction(transaction)
+		const committedTransactionHash = await agent.account.sendTransaction({
+			sender: agent.account.getAddress().toString(),
+			data: {
+				function: "0x2fe576faa841347a9b1b32c869685deb75a15e3f62dfe37cbd6d52cc403a16f6::pool::claim_rewards",
+				typeArguments: [
+					isCoinTypeSTApt
+						? "0x111ae3e5bc816a5e63c2da97d0aa3886519e0cd5e4b046659fa35796bd11542a::amapt_token::AmnisApt"
+						: "0x1::aptos_coin::AptosCoin",
+				],
+				functionArguments: [coinReward, isCoinTypeSTApt ? "amAPTIncentives" : "APTIncentives"],
+			},
+		})
 
 		const signedTransaction = await agent.aptos.waitForTransaction({
 			transactionHash: committedTransactionHash,

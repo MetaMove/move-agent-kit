@@ -20,7 +20,7 @@ export class AmnisStakeTool extends Tool {
 		try {
 			const parsedInput = parseJson(input)
 
-			const recipient = AccountAddress.from(parsedInput.recipient) || this.agent.account.getAddress()
+			const recipient = AccountAddress.from(parsedInput.recipient) || this.agent.account.getAddress().toString()
 
 			const stakeTransactionHash = await this.agent.stakeTokensWithAmnis(
 				recipient,

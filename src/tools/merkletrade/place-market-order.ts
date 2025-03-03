@@ -23,19 +23,17 @@ export async function placeMarketOrderWithMerkleTrade(
 
 		const payload = merkle.payloads.placeMarketOrder({
 			pair: pair,
-			userAddress: agent.account.getAddress(),
+			userAddress: agent.account.getAddress().toString(),
 			sizeDelta: fromNumber(sizeDelta, 6),
 			collateralDelta: fromNumber(collateralDelta, 6),
 			isLong: isLong,
 			isIncrease: true,
 		})
 
-		const transaction = await agent.aptos.transaction.build.simple({
-			sender: agent.account.getAddress(),
+		const txhash = await agent.account.sendTransaction({
+			sender: agent.account.getAddress().toString(),
 			data: payload,
 		})
-
-		const txhash = await agent.account.sendTransaction(transaction)
 
 		const signedTransaction = await agent.aptos.waitForTransaction({
 			transactionHash: txhash,
