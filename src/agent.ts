@@ -1,4 +1,5 @@
 import type { AccountAddress, Aptos, MoveStructId } from "@aptos-labs/ts-sdk"
+import type { SymbolEmoji } from "@econia-labs/emojicoin-sdk"
 import { AptosPriceServiceConnection } from "@pythnetwork/pyth-aptos-js"
 import { priceFeed } from "./constants/price-feed"
 import type { BaseSigner } from "./signers"
@@ -9,6 +10,7 @@ import {
 	claimReward,
 	createToken,
 	getBalance,
+	getMarketEmojicoin,
 	getPoolDetails,
 	getTokenDetails,
 	getTokenPrice,
@@ -17,6 +19,7 @@ import {
 	getUserPosition,
 	lendToken,
 	mintToken,
+	registerMarketEmojicoin,
 	repayToken,
 	stakeTokens,
 	transferNFT,
@@ -38,6 +41,10 @@ import {
 	withdrawTokenWithEchelon,
 } from "./tools/echelon"
 import { stakeTokenWithEcho, unstakeTokenWithEcho } from "./tools/echo"
+import { chatEmojicoin } from "./tools/emojicoin/chat"
+import { provideLiquidityEmojicoins } from "./tools/emojicoin/provide-liquidity"
+import { removeLiquidityEmojicoins } from "./tools/emojicoin/remove-liquidity"
+import { swapEmojicoins } from "./tools/emojicoin/swap"
 import { addLiquidity, createPool, removeLiquidity, swap } from "./tools/liquidswap"
 import {
 	closePositionWithMerkleTrade,
@@ -127,20 +134,20 @@ export class AgentRuntime {
 		return burnNFT(this, mint)
 	}
 
-	lendToken(amount: number, mint: MoveStructId, positionId: string, newPosition: boolean, fungibleAsset: boolean) {
-		return lendToken(this, amount, mint, positionId, newPosition, fungibleAsset)
+	lendToken(amount: number, mint: MoveStructId, positionId: string, newPosition: boolean) {
+		return lendToken(this, amount, mint, positionId, newPosition)
 	}
 
-	borrowToken(amount: number, mint: MoveStructId, positionId: string, fungibleAsset: boolean) {
-		return borrowToken(this, amount, mint, positionId, fungibleAsset)
+	borrowToken(amount: number, mint: MoveStructId, positionId: string) {
+		return borrowToken(this, amount, mint, positionId)
 	}
 
-	withdrawToken(amount: number, mint: MoveStructId, positionId: string, fungibleAsset: boolean) {
-		return withdrawToken(this, amount, mint, positionId, fungibleAsset)
+	withdrawToken(amount: number, mint: MoveStructId, positionId: string) {
+		return withdrawToken(this, amount, mint, positionId)
 	}
 
-	repayToken(amount: number, mint: MoveStructId, positionId: string, fungibleAsset: boolean) {
-		return repayToken(this, amount, mint, positionId, fungibleAsset)
+	repayToken(amount: number, mint: MoveStructId, positionId: string) {
+		return repayToken(this, amount, mint, positionId)
 	}
 
 	getUserPosition(userAddress: AccountAddress, positionId: string) {
@@ -295,5 +302,29 @@ export class AgentRuntime {
 
 	getPositionsWithMerkleTrade() {
 		return getPositionsWithMerkleTrade(this)
+	}
+
+	registerMarketEmojicoin(emojis: SymbolEmoji[]) {
+		return registerMarketEmojicoin(this, emojis)
+	}
+
+	chatEmojicoin(message: string) {
+		return chatEmojicoin(this, message)
+	}
+
+	swapEmojicoins(emojis: SymbolEmoji[], Amount: number, isSelling: boolean) {
+		return swapEmojicoins(this, emojis, Amount, isSelling)
+	}
+
+	provideLiquidityEmojicoins(emojis: SymbolEmoji[], amount: number) {
+		return provideLiquidityEmojicoins(this, emojis, amount)
+	}
+
+	removeLiquidityEmojicoins(emojis: SymbolEmoji[], amount: number) {
+		return removeLiquidityEmojicoins(this, emojis, amount)
+	}
+
+	getMarketEmojicoin(emojis: SymbolEmoji[]) {
+		return getMarketEmojicoin(this, emojis)
 	}
 }

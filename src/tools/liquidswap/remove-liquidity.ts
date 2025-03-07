@@ -20,8 +20,8 @@ export async function removeLiquidity(
 	minMintY = 0
 ): Promise<string> {
 	try {
-		const transaction = await agent.aptos.transaction.build.simple({
-			sender: agent.account.getAddress(),
+		const committedTransactionHash = await agent.account.sendTransaction({
+			sender: agent.account.getAddress().toString(),
 			data: {
 				function: "0x9dd974aea0f927ead664b9e1c295e4215bd441a9fb4e53e5ea0bf22f356c8a2b::router::remove_liquidity_v05",
 				typeArguments: [
@@ -32,8 +32,6 @@ export async function removeLiquidity(
 				functionArguments: [lpAmount, minMintX, minMintY],
 			},
 		})
-
-		const committedTransactionHash = await agent.account.sendTransaction(transaction)
 
 		const signedTransaction = await agent.aptos.waitForTransaction({
 			transactionHash: committedTransactionHash,

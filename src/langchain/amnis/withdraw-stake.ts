@@ -20,7 +20,7 @@ export class AmnisWithdrawStakeTool extends Tool {
 		try {
 			const parsedInput = parseJson(input)
 
-			const recipient = AccountAddress.from(parsedInput.recipient) || this.agent.account.getAddress()
+			const recipient = AccountAddress.from(parsedInput.recipient) || this.agent.account.getAddress().toString()
 
 			const withdrawStakeTransactionHash = await this.agent.withdrawStakeFromAmnis(
 				recipient,
