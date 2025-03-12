@@ -131,6 +131,13 @@ Create a configuration file .env in your project root:
 APTOS_PRIVATE_KEY="private key"
 ANTHROPIC_API_KEY="API Key"
 OPENAI_API_KEY="API Key"
+
+// check docs here: https://github.com/econia-labs/emojicoin-dot-fun?tab=readme-ov-file#environment-variables
+NEXT_PUBLIC_MODULE_ADDRESS="0xface729284ae5729100b3a9ad7f7cc025ea09739cd6e7252aff0beb53619cafe"
+NEXT_PUBLIC_REWARDS_MODULE_ADDRESS="0xbabe32dbe1cb44c30363894da9f49957d6e2b94a06f2fc5c20a9d1b9e54cface"
+NEXT_PUBLIC_INTEGRATOR_ADDRESS="0x99994f5124fa5cc95538217780cbfc01e4c4f842dfcc453890755b2ce4779999"
+NEXT_PUBLIC_ARENA_MODULE_ADDRESS="0x0" # Emojicoin arena is not on mainnet yet.
+NEXT_PUBLIC_INTEGRATOR_FEE_RATE_BPS="100"
 ``` 
 
 ### Initialize the Client
