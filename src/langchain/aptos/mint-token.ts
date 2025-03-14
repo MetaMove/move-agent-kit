@@ -24,7 +24,7 @@ if the recipient wants to receive the token and not send to anybody else, keep t
 
 			const mintDetail = await this.agent.getTokenDetails(parsedInput.mint)
 
-			const recipient = AccountAddress.from(parsedInput.to) || this.agent.account.getAddress()
+			const recipient = AccountAddress.from(parsedInput.to) || this.agent.account.getAddress().toString()
 			const mintTokenTransactionHash = await this.agent.mintToken(recipient, parsedInput.mint, parsedInput.amount)
 
 			return JSON.stringify({

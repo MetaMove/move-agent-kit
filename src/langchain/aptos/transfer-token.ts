@@ -28,7 +28,7 @@ export class AptosTransferTokenTool extends Tool {
 
 			const mintDetail = await this.agent.getTokenDetails(parsedInput.mint)
 
-			const recipient = AccountAddress.from(parsedInput.to) || this.agent.account.getAddress()
+			const recipient = AccountAddress.from(parsedInput.to) || this.agent.account.getAddress().toString()
 
 			const transferTokenTransactionHash = await this.agent.transferTokens(
 				recipient,

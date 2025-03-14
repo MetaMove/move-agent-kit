@@ -19,7 +19,7 @@ export async function getBalance(agent: AgentRuntime, mint?: string | MoveStruct
 					options: {
 						where: {
 							owner_address: {
-								_eq: agent.account.getAddress().toStringLong(),
+								_eq: agent.account.getAddress().toString().toString(),
 							},
 							asset_type: { _eq: mint },
 						},
@@ -29,14 +29,14 @@ export async function getBalance(agent: AgentRuntime, mint?: string | MoveStruct
 				balance = balances[0].amount ?? 0
 			} else {
 				balance = await agent.aptos.getAccountCoinAmount({
-					accountAddress: agent.account.getAddress(),
+					accountAddress: agent.account.getAddress().toString(),
 					coinType: mint as MoveStructId,
 				})
 			}
 			return balance
 		}
 		const balance = await agent.aptos.getAccountAPTAmount({
-			accountAddress: agent.account.getAddress(),
+			accountAddress: agent.account.getAddress().toString(),
 		})
 
 		const convertedBalance = convertAmountFromOnChainToHumanReadable(balance, 8)

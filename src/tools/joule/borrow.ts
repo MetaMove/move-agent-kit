@@ -19,8 +19,7 @@ export async function borrowToken(
 	agent: AgentRuntime,
 	amount: number,
 	mint: MoveStructId,
-	positionId: string,
-	fungibleAsset: boolean
+	positionId: string
 ): Promise<{
 	hash: string
 	positionId: string
@@ -41,12 +40,10 @@ export async function borrowToken(
 	}
 
 	try {
-		const transaction = await agent.aptos.transaction.build.simple({
-			sender: agent.account.getAddress(),
-			data: fungibleAsset ? FUNGIBLE_ASSET_DATA : COIN_STANDARD_DATA,
+		const committedTransactionHash = await agent.account.sendTransaction({
+			sender: agent.account.getAddress().toString(),
+			data: mint.split("::").length === 3 ? COIN_STANDARD_DATA : FUNGIBLE_ASSET_DATA,
 		})
-
-		const committedTransactionHash = await agent.account.sendTransaction(transaction)
 
 		const signedTransaction = await agent.aptos.waitForTransaction({
 			transactionHash: committedTransactionHash,

@@ -27,13 +27,10 @@ export class JouleWithdrawTokenTool extends Tool {
 
 			const mintDetail = await this.agent.getTokenDetails(parsedInput.mint)
 
-			const fungibleAsset = mintDetail.faAddress.toLowerCase() === parsedInput.mint.toLowerCase()
-
 			const withdrawTokenTransactionHash = await this.agent.withdrawToken(
 				convertAmountFromHumanReadableToOnChain(parsedInput.amount, mintDetail.decimals || 8),
 				parsedInput.mint,
-				parsedInput.positionId,
-				fungibleAsset
+				parsedInput.positionId
 			)
 
 			return JSON.stringify({

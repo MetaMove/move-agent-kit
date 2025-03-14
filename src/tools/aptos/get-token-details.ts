@@ -1,5 +1,4 @@
 import axios from "axios"
-import { AgentRuntime } from "../../agent"
 
 /**
  * Fetches balance of an aptos account

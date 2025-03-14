@@ -29,14 +29,11 @@ export class JouleLendTokenTool extends Tool {
 
 			const mintDetail = await this.agent.getTokenDetails(parsedInput.mint)
 
-			const fungibleAsset = mintDetail.faAddress.toLowerCase() === parsedInput.mint.toLowerCase()
-
 			const lendTokenTransactionHash = await this.agent.lendToken(
 				convertAmountFromHumanReadableToOnChain(parsedInput.amount, mintDetail.decimals || 8),
 				parsedInput.mint,
 				parsedInput.positionId,
-				parsedInput.newPosition,
-				fungibleAsset
+				parsedInput.newPosition
 			)
 
 			return JSON.stringify({
