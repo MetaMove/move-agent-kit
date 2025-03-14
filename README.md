@@ -54,16 +54,18 @@ The toolkit serves as a bridge between AI agents and Move-based blockchain ecosy
 ## Supported Applications
 Move Agent Kit provides native integration with several prominent Move-based applications:
 
-| Protocol    | Features Supported                  |
-|-------------|-------------------------------------|
-| Joule       | Lending borrowing defi operations   |
-| Amnis       | Staking operations                  |
-| Thala       | Staking and DEX operations          |
-| Echelon     | Lending borrowing defi operations   |
-| LiquidSwap  | DEX operations                      |
-| Panora      | DEX aggregation operations          |
-| Aries       | Lending borrowing defi operations   |
-| Echo        | Staking operations                  |
+| Protocol    | Features Supported                     |
+|-------------|----------------------------------------|
+| Joule       | Lending borrowing defi operations      |
+| Amnis       | Staking operations                     |
+| Thala       | Staking and DEX operations             |
+| Echelon     | Lending borrowing defi operations      |
+| LiquidSwap  | DEX operations                         |
+| Panora      | DEX aggregation operations             |
+| Aries       | Lending borrowing defi operations      |
+| Echo        | Staking operations                     |
+| Twitter     | Post, like, retweet, search, user info |
+
 
 ### Upcoming Features
 - Image Generation capabilities
@@ -131,6 +133,8 @@ Create a configuration file .env in your project root:
 APTOS_PRIVATE_KEY="private key"
 ANTHROPIC_API_KEY="API Key"
 OPENAI_API_KEY="API Key"
+TWITTER_USERNAME="username"
+TWITTER_PASSWORD="password"
 ``` 
 
 ### Initialize the Client
@@ -139,7 +143,11 @@ OPENAI_API_KEY="API Key"
 const signer = new LocalSigner(account, Network.MAINNET);
 const agent = new AgentRuntime(signer, aptos, {
 	PANORA_API_KEY: process.env.PANORA_API_KEY, // optional
-	OPENAI_API_KEY: process.env.OPENAI_API_KEY // optional
+	OPENAI_API_KEY: process.env.OPENAI_API_KEY, // optional
+    twitter: { // optional
+		username: process.env.TWITTER_USERNAME,
+		password: process.env.TWITTER_PASSWORD
+	}
 });
 const tools = createAptosTools(aptosAgent);
 ```

@@ -65,6 +65,7 @@
 		"@modelcontextprotocol/sdk": "^1.7.0",
 		"@pythnetwork/client": "^2.22.0",
 		"@pythnetwork/pyth-aptos-js": "^1.4.2",
+		"agent-twitter-client": "^0.0.18",
 		"axios": "^1.7.9",
 		"bs58": "^6.0.0",
 		"inquirer": "^12.3.2",
