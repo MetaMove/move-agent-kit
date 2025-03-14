@@ -56,6 +56,7 @@ import {
 	stakeTokenWithThala,
 	unstakeAPTWithThala,
 } from "./tools/thala"
+import { XPost, XLike, XRetweet, XSearch, XGetUser } from "./tools/twitter"
 import { getTokenByTokenName } from "./utils/get-pool-address-by-token-name"
 
 export class AgentRuntime {
@@ -295,5 +296,27 @@ export class AgentRuntime {
 
 	getPositionsWithMerkleTrade() {
 		return getPositionsWithMerkleTrade(this)
+	}
+
+	// Twitter tools
+	
+	postTweet(text: string) {
+		return XPost(this, text)
+	}
+
+	likeTweet(tweetId: string) {
+		return XLike(this, tweetId)
+	}
+
+	retweetTweet(tweetId: string) {
+		return XRetweet(this, tweetId)
+	}
+
+	searchTweets(query: string, limit?: number) {
+		return XSearch(this, query, limit)
+	}
+
+	getTwitterUser(username: string) {
+		return XGetUser(this, username)
 	}
 }

@@ -1,5 +1,37 @@
 import type { AccountAuthenticator } from "@aptos-labs/ts-sdk"
 
+// Twitter tool response types
+export interface TwitterResponse {
+	success: boolean
+	error?: string
+	message?: string
+}
+
+export interface TwitterPostResponse extends TwitterResponse {
+	result?: {
+		text: string
+		id: string
+		username?: string
+		timestamp?: number
+	}
+}
+
+export interface TwitterSearchResponse extends TwitterResponse {
+	posts?: Array<{
+		text: string
+		username: string
+		timestamp: number | string
+	}>
+}
+
+export interface TwitterUserResponse extends TwitterResponse {
+	profile?: {
+		name: string
+		followers: number
+		posts: number
+	}
+}
+
 export type ToolsNameList =
 	| "aptos_balance"
 	| "aptos_get_wallet_address"
@@ -45,6 +77,11 @@ export type ToolsNameList =
 	| "merkle_trade_place_limit_order"
 	| "merkle_trade_close_position"
 	| "merkle_trade_get_position"
+	| "twitter_post"
+	| "twitter_like"
+	| "twitter_retweet"
+	| "twitter_search"
+	| "twitter_get_user"
 
 export type SignedTransactionResponse = {
 	senderAuthenticator?: AccountAuthenticator
