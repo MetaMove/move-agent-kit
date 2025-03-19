@@ -7,6 +7,7 @@ import {
 	burnNFT,
 	burnToken,
 	claimReward,
+	closeLoop,
 	createToken,
 	getBalance,
 	getPoolDetails,
@@ -17,6 +18,7 @@ import {
 	getUserPosition,
 	lendToken,
 	mintToken,
+	openLoop,
 	repayToken,
 	stakeTokens,
 	transferNFT,
@@ -141,6 +143,14 @@ export class AgentRuntime {
 
 	repayToken(amount: number, mint: MoveStructId, positionId: string, fungibleAsset: boolean) {
 		return repayToken(this, amount, mint, positionId, fungibleAsset)
+	}
+
+	openLoop(amount: number, leverage: number) {
+		return openLoop(this, amount, leverage)
+	}
+
+	closeLoop(position_id: number) {
+		return closeLoop(this, position_id)
 	}
 
 	getUserPosition(userAddress: AccountAddress, positionId: string) {

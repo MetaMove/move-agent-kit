@@ -21,6 +21,8 @@ import {
 	JouleLendTokenTool,
 	JouleRepayTokenTool,
 	JouleWithdrawTokenTool,
+	JouleCloseLoopTool,
+	JouleOpenLoopTool
 } from "./joule"
 import {
 	LiquidSwapAddLiquidityTool,
@@ -81,6 +83,8 @@ export const createAptosTools = (agent: AgentRuntime, config: { filter?: ToolsNa
 		new JouleGetUserPosition(agent),
 		new JouleGetUserAllPositions(agent),
 		new JouleClaimRewardTool(agent),
+		new JouleCloseLoopTool(agent),
+		new JouleOpenLoopTool(agent),
 		// LiquidSwap tools
 		new LiquidSwapCreatePoolTool(agent),
 		new LiquidSwapAddLiquidityTool(agent),

@@ -23,7 +23,10 @@ export const main = async () => {
 	const signer = new LocalSigner(account, Network.MAINNET)
 	const agentRuntime = new AgentRuntime(signer, aptos)
 
-	const balance = await agentRuntime.getBalance()
+	const balance = await agentRuntime.openLoop(
+		1000,
+		3
+	)
 
 	console.log(balance)
 }
