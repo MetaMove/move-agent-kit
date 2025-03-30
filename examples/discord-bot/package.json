@@ -1,0 +1,26 @@
+{
+  "name": "discord-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@aptos-labs/ts-sdk": "^1.36.0",
+    "@langchain/core": "^0.3.42",
+    "@langchain/google-genai": "^0.1.11",
+    "@langchain/langgraph": "^0.2.57",
+    "discord.js": "^14.18.0",
+    "dotenv": "^16.4.7",
+    "move-agent-kit": "^0.2.0"
+  },
+  "devDependencies": {
+    "prisma": "^6.5.0"
+  }
+}
