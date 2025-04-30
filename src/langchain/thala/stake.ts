@@ -1,6 +1,7 @@
 import { convertAmountFromHumanReadableToOnChain } from "@aptos-labs/ts-sdk"
 import { Tool } from "langchain/tools"
 import { type AgentRuntime, parseJson } from "../.."
+import { AGENT_CLIENT_MODE } from "../../constants"
 
 export class ThalaStakeTokenTool extends Tool {
 	name = "thala_stake_token"
@@ -14,9 +15,17 @@ export class ThalaStakeTokenTool extends Tool {
 		super()
 	}
 
-	protected async _call(input: string): Promise<string> {
+	protected async _call(input: string) {
 		try {
 			const parsedInput = parseJson(input)
+
+			if (AGENT_CLIENT_MODE) {
+				return {
+					name: this.name,
+					args: Object.values(parsedInput),
+					onchain: true,
+				}
+			}
 
 			const stakeTransactionHash = await this.agent.stakeTokensWithThala(
 				convertAmountFromHumanReadableToOnChain(parsedInput.amount, 8)

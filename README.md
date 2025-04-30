@@ -1,10 +1,10 @@
 <div align="center">
 
-# Move Agent Kit
+# Move Agent Kit Fullstack
 
 An open-source toolkit for connecting AI agents to Move/Aptos protocols.
 
-![Move Agent Kit](./move-agent-kit.jpeg "Move Agent Kit")
+![Move Agent Kit Fullstack](./move-agent-kit.jpeg "Move Agent Kit Fullstack")
 
 ![NPM Downloads](https://img.shields.io/npm/dm/move-agent-kit?style=for-the-badge)
 ![<strong>GitHub</strong> forks](https://img.shields.io/github/forks/MetaMove/move-agent-kit?style=for-the-badge)
@@ -12,7 +12,7 @@ An open-source toolkit for connecting AI agents to Move/Aptos protocols.
 
 <br />
 
-<strong>Move Agent Kit</strong> is a comprehensive toolkit designed to simplify AI agents' interactions with Move-based blockchains. It provides a unified interface for performing various blockchain operations, making it easier for developers to build AI-powered applications that can interact with different Move-based protocols and applications.
+<strong>Move Agent Kit Fullstack</strong> is a comprehensive toolkit designed to simplify AI agents' interactions with Move-based blockchains. It provides a unified interface for performing various blockchain operations, making it easier for developers to build AI-powered applications that can interact with different Move-based protocols and applications.
 
 The toolkit serves as a bridge between AI agents and Move-based blockchain ecosystems, enabling seamless integration of blockchain capabilities into AI applications. Whether you're building a chatbot with wallet functionality or a complex multi-agent system, Move Agent Kit provides the necessary tools and abstractions to handle blockchain interactions efficiently.
 
@@ -22,6 +22,8 @@ The toolkit serves as a bridge between AI agents and Move-based blockchain ecosy
 - Standard Token Management
 
 - Transfer tokens between accounts
+
+- Get transactions details
 
 - Mint new tokens
 
@@ -64,6 +66,7 @@ Move Agent Kit provides native integration with several prominent Move-based app
 | Panora      | DEX aggregation operations          |
 | Aries       | Lending borrowing defi operations   |
 | Echo        | Staking operations                  |
+| emojicoins  | Emojicoins defi                     | 
 
 ### Upcoming Features
 - Image Generation capabilities
@@ -131,6 +134,20 @@ Create a configuration file .env in your project root:
 APTOS_PRIVATE_KEY="private key"
 ANTHROPIC_API_KEY="API Key"
 OPENAI_API_KEY="API Key"
+PLATFORM="sever" //if your run the app on backend
+
+// check docs here: https://github.com/econia-labs/emojicoin-dot-fun?tab=readme-ov-file#environment-variables
+NEXT_PUBLIC_MODULE_ADDRESS="0xface729284ae5729100b3a9ad7f7cc025ea09739cd6e7252aff0beb53619cafe"
+NEXT_PUBLIC_REWARDS_MODULE_ADDRESS="0xbabe32dbe1cb44c30363894da9f49957d6e2b94a06f2fc5c20a9d1b9e54cface"
+NEXT_PUBLIC_INTEGRATOR_ADDRESS="0x99994f5124fa5cc95538217780cbfc01e4c4f842dfcc453890755b2ce4779999"
+NEXT_PUBLIC_ARENA_MODULE_ADDRESS="0x0" # Emojicoin arena is not on mainnet yet.
+NEXT_PUBLIC_INTEGRATOR_FEE_RATE_BPS="100"
+AGENT_CLIENT_MODE=true // If transactions will be signed by user wallets
+
+// OPTIONAL
+INTEGRATOR_FEE_PORCENTAGE=1 // Integration fees to collect
+INTEGRATOR_FEE_ADDRESS="0x3212ed354e3d5b17ed6e3f7e8fb3066325b54be80d61d0d5d01dbc23d95f34d5" // Integration address to collect for Panora
+EMOJI_INTEGRATOR="0x3212ed354e3d5b17ed6e3f7e8fb3066325b54be80d61d0d5d01dbc23d95f34d5" // Integration address to collect for Emojicoin
 ``` 
 
 ### Initialize the Client
@@ -171,7 +188,7 @@ import { HumanMessage } from "@langchain/core/messages";
 
 const llm = new ChatAnthropic({
     temperature: 0.7,
-    model: "claude-3-5-sonnet-20241022",
+    model: "gpt-4o-mini",
 });
 
 const memory = new MemorySaver();
@@ -208,10 +225,28 @@ for await (const chunk of stream) {
 }
 ```
 
+## Skip fees validation in Panora and emojicoins
 
-## Documentation
+```ts
+export const isUserEligibleToSkipFees = async (
+  agent: AgentRuntime,
+  account: string
+) => {
+  const result = await agent.aptos.view({
+    payload: {
+      function: `${process.env.NEXT_PUBLIC_MY_CONTRACT_MODULE_ADDRESS}::my_app::is_eligible`,
+      typeArguments: [],
+      functionArguments: [account],
+    },
+  });
 
-Full documentation available at [MetaMove GitBook Documentation](https://metamove.gitbook.io/move-agent-kit).
+  return result[0]
+};
+
+...
+
+await agent.swapWithPanora(fromToken, toToken, swapAmount, toWalletAddress, isUserEligibleToSkipFees);
+```
 
 ## Examples and Use Cases
 <br/>
@@ -220,15 +255,34 @@ Full documentation available at [MetaMove GitBook Documentation](https://metamov
 
 A natural language interface for interacting with Move-based blockchains. Users can send commands in plain English to perform blockchain operations.
 
-#### Features:
+### Features:
 - Send/receive tokens and NFTs
 - Check balances and transaction history
 - Create NFT collections
 - Interact with DeFi protocols
 
-<br />
+### Client Agent
 
-<strong>GitHub</strong>: https://github.com/MetaMove/move-agent-kit/tree/main/examples/chat-agent
+**Move Agent Kit – Full-Stack Support for Wallet-Based Transaction Signatures**
+
+**Workflow:**
+
+1. **Client Sends Prompt:**  
+   The client initiates the process by sending a prompt to the backend.
+
+2. **Backend Processes Request:**  
+   The backend selects the appropriate tool and responds with the specific method and required parameters for the agent.
+
+3. **Client Executes Agent Method:**  
+   The client calls the agent's method using the parameters provided by the backend.
+
+This streamlined workflow ensures secure and efficient transaction signing via the user's wallet.
+To enable Client Agent just set `AGENT_CLIENT_MODE` to `true` in .env file
+
+#### Get started template
+
+[Here](https://github.com/Singularity-Shift/move-agent-kit-fullstack-template) you can find the template where you will learn hot the workflow works
+
 
 
 ### Multi-Agent System (LangGraph Based)
@@ -239,9 +293,6 @@ A system of specialized AI agents working together to perform complex blockchain
 - Tweet Writer Agent: Write bull posts about various onchain data
 - X Post Agent: Post tweets on X/Twitter
 
-<br />
-
-<strong>GitHub</strong>: https://github.com/MetaMove/move-agent-kit/tree/main/examples/langgraph-agent
 
 ### Wallet Guardian (Freysa-like AI)
 An AI based on Game where users have to blackmail an AI Agent into giving them all of its APT

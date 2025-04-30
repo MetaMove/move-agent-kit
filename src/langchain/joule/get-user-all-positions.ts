@@ -1,6 +1,7 @@
 import { AccountAddress } from "@aptos-labs/ts-sdk"
 import { Tool } from "langchain/tools"
 import { type AgentRuntime, parseJson } from "../.."
+import { AGENT_CLIENT_MODE } from "../../constants"
 import { tokensList } from "../../utils/get-pool-address-by-token-name"
 
 export class JouleGetUserAllPositions extends Tool {
@@ -17,11 +18,19 @@ export class JouleGetUserAllPositions extends Tool {
 		super()
 	}
 
-	protected async _call(input: string): Promise<string> {
+	protected async _call(input: string) {
 		try {
 			const parsedInput = parseJson(input)
 
-			const userAddress = AccountAddress.from(parsedInput.userAddress) || this.agent.account.getAddress()
+			if (AGENT_CLIENT_MODE) {
+				return {
+					name: this.name,
+					args: Object.values(parsedInput),
+					onchain: true,
+				}
+			}
+
+			const userAddress = AccountAddress.from(parsedInput.userAddress) || this.agent.account.getAddress().toString()
 
 			const jouleUserAllPositions = await this.agent.getUserAllPositions(userAddress)
 

@@ -1,4 +1,5 @@
 import type { AccountAddress, Aptos, MoveStructId } from "@aptos-labs/ts-sdk"
+import type { SymbolEmoji } from "@econia-labs/emojicoin-sdk"
 import { AptosPriceServiceConnection } from "@pythnetwork/pyth-aptos-js"
 import { priceFeed } from "./constants/price-feed"
 import type { BaseSigner } from "./signers"
@@ -9,14 +10,17 @@ import {
 	claimReward,
 	createToken,
 	getBalance,
+	getMarketEmojicoin,
 	getPoolDetails,
 	getTokenDetails,
 	getTokenPrice,
 	getTransaction,
+	getTransactionHistory,
 	getUserAllPositions,
 	getUserPosition,
 	lendToken,
 	mintToken,
+	registerMarketEmojicoin,
 	repayToken,
 	stakeTokens,
 	transferNFT,
@@ -38,6 +42,9 @@ import {
 	withdrawTokenWithEchelon,
 } from "./tools/echelon"
 import { stakeTokenWithEcho, unstakeTokenWithEcho } from "./tools/echo"
+import { provideLiquidityEmojicoin } from "./tools/emojicoin/provide-liquidity"
+import { removeLiquidityEmojicoin } from "./tools/emojicoin/remove-liquidity"
+import { swapEmojicoins } from "./tools/emojicoin/swap"
 import { addLiquidity, createPool, removeLiquidity, swap } from "./tools/liquidswap"
 import {
 	closePositionWithMerkleTrade,
@@ -46,7 +53,7 @@ import {
 	placeMarketOrderWithMerkleTrade,
 } from "./tools/merkletrade"
 import { createImage } from "./tools/openai"
-import { swapWithPanora } from "./tools/panora"
+import { listWithPanora, swapWithPanora } from "./tools/panora"
 import {
 	addLiquidityWithThala,
 	createPoolWithThala,
@@ -99,6 +106,10 @@ export class AgentRuntime {
 		return getTransaction(this, hash)
 	}
 
+	getTransactionHistory(page?: number, limit?: number) {
+		return getTransactionHistory(this, page, limit)
+	}
+
 	burnToken(amount: number, mint: string) {
 		return burnToken(this, amount, mint)
 	}
@@ -127,20 +138,20 @@ export class AgentRuntime {
 		return burnNFT(this, mint)
 	}
 
-	lendToken(amount: number, mint: MoveStructId, positionId: string, newPosition: boolean, fungibleAsset: boolean) {
-		return lendToken(this, amount, mint, positionId, newPosition, fungibleAsset)
+	lendToken(amount: number, mint: MoveStructId, positionId: string, newPosition: boolean) {
+		return lendToken(this, amount, mint, positionId, newPosition)
 	}
 
-	borrowToken(amount: number, mint: MoveStructId, positionId: string, fungibleAsset: boolean) {
-		return borrowToken(this, amount, mint, positionId, fungibleAsset)
+	borrowToken(amount: number, mint: MoveStructId, positionId: string) {
+		return borrowToken(this, amount, mint, positionId)
 	}
 
-	withdrawToken(amount: number, mint: MoveStructId, positionId: string, fungibleAsset: boolean) {
-		return withdrawToken(this, amount, mint, positionId, fungibleAsset)
+	withdrawToken(amount: number, mint: MoveStructId, positionId: string) {
+		return withdrawToken(this, amount, mint, positionId)
 	}
 
-	repayToken(amount: number, mint: MoveStructId, positionId: string, fungibleAsset: boolean) {
-		return repayToken(this, amount, mint, positionId, fungibleAsset)
+	repayToken(amount: number, mint: MoveStructId, positionId: string) {
+		return repayToken(this, amount, mint, positionId)
 	}
 
 	getUserPosition(userAddress: AccountAddress, positionId: string) {
@@ -235,8 +246,18 @@ export class AgentRuntime {
 
 	// panora
 
-	swapWithPanora(fromToken: string, toToken: string, swapAmount: number, toWalletAddress?: string) {
-		return swapWithPanora(this, fromToken, toToken, swapAmount, toWalletAddress)
+	swapWithPanora(
+		fromToken: string,
+		toToken: string,
+		swapAmount: number,
+		toWalletAddress?: string,
+		validateSkipFees?: (agent: AgentRuntime, account: string) => Promise<boolean>
+	) {
+		return swapWithPanora(this, fromToken, toToken, swapAmount, toWalletAddress, validateSkipFees)
+	}
+
+	listWithPanora(tokenAddress?: string, panoraUI?: boolean, panoraTags?: string) {
+		return listWithPanora(this, tokenAddress, panoraUI, panoraTags)
 	}
 
 	// openai
@@ -295,5 +316,30 @@ export class AgentRuntime {
 
 	getPositionsWithMerkleTrade() {
 		return getPositionsWithMerkleTrade(this)
+	}
+
+	registerMarketEmojicoin(emojis: SymbolEmoji[]) {
+		return registerMarketEmojicoin(this, emojis)
+	}
+
+	swapEmojicoins(
+		emojis: SymbolEmoji[],
+		Amount: number,
+		isSelling: boolean,
+		validateSkipFees?: (agent: AgentRuntime, account: string) => Promise<boolean>
+	) {
+		return swapEmojicoins(this, emojis, Amount, isSelling, validateSkipFees)
+	}
+
+	provideLiquidityEmojicoin(emojis: SymbolEmoji[], amount: number) {
+		return provideLiquidityEmojicoin(this, emojis, amount)
+	}
+
+	removeLiquidityEmojicoin(emojis: SymbolEmoji[], amount: number) {
+		return removeLiquidityEmojicoin(this, emojis, amount)
+	}
+
+	getMarketEmojicoin(emojis: SymbolEmoji[]) {
+		return getMarketEmojicoin(this, emojis)
 	}
 }

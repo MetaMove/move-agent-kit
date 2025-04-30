@@ -1,6 +1,6 @@
 {
-	"name": "move-agent-kit",
-	"version": "0.2.0",
+	"name": "move-agent-kit-fullstack",
+	"version": "0.3.0",
 	"description": "",
 	"main": "./dist/index.js",
 	"module": "./dist/index.mjs",
@@ -41,9 +41,7 @@
 	"bugs": {
 		"url": "https://github.com/metamove/move-agent-kit/issues"
 	},
-	"files": [
-		"dist"
-	],
+	"files": ["dist"],
 	"homepage": "https://github.com/metamove/move-agent-kit#readme",
 	"keywords": [],
 	"author": "metamove <hello@metamove.build> (https://metamove.build)",
@@ -58,6 +56,7 @@
 		"typescript": "^5.7.3"
 	},
 	"dependencies": {
+		"@econia-labs/emojicoin-sdk": "^0.5.2",
 		"@langchain/anthropic": "^0.3.11",
 		"@langchain/core": "^0.3.29",
 		"@langchain/langgraph": "^0.2.39",
@@ -90,15 +89,7 @@
 		"@aptos-labs/wallet-adapter-react": "^4.1.0"
 	},
 	"pnpm": {
-		"ignoredBuiltDependencies": [
-			"bigint-buffer",
-			"bufferutil",
-			"esbuild",
-			"utf-8-validate"
-		],
-		"onlyBuiltDependencies": [
-			"@biomejs/biome",
-			"lefthook"
-		]
+		"ignoredBuiltDependencies": ["bigint-buffer", "bufferutil", "esbuild", "utf-8-validate"],
+		"onlyBuiltDependencies": ["@biomejs/biome", "lefthook"]
 	}
 }

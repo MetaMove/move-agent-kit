@@ -1,5 +1,6 @@
 import { Tool } from "langchain/tools"
 import type { AgentRuntime } from "../.."
+import { AGENT_CLIENT_MODE } from "../../constants"
 
 export class AriesCreateProfileTool extends Tool {
 	name = "aries_create_profile"
@@ -10,8 +11,16 @@ export class AriesCreateProfileTool extends Tool {
 		super()
 	}
 
-	protected async _call(): Promise<string> {
+	protected async _call() {
 		try {
+			if (AGENT_CLIENT_MODE) {
+				return {
+					name: this.name,
+					args: [],
+					onchain: true,
+				}
+			}
+
 			const createProfileTransactionHash = await this.agent.createAriesProfile()
 
 			return JSON.stringify({

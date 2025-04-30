@@ -1,5 +1,5 @@
-import axios from "axios"
 import type { AgentRuntime } from "../../agent"
+import { getSwapDetails } from "../../utils/get-swap-detail-panora"
 
 /**
  * Swap tokens in panora
@@ -15,33 +15,18 @@ export async function swapWithPanora(
 	fromToken: string,
 	toToken: string,
 	swapAmount: number,
-	toWalletAddress?: string
+	toWalletAddress?: string,
+	validateSkipFees?: (agent: AgentRuntime, account: string) => Promise<boolean>
 ): Promise<string> {
 	try {
-		const panoraParameters = {
-			fromTokenAddress: fromToken,
-			toTokenAddress: toToken,
-			fromTokenAmount: swapAmount.toString(),
-			toWalletAddress: toWalletAddress ? toWalletAddress : agent.account.getAddress().toString(),
-		}
-
-		const url = `https://api.panora.exchange/swap?${new URLSearchParams(panoraParameters).toString()}`
-
-		const panoraApiKey = agent.config.PANORA_API_KEY
-		if (!panoraApiKey) {
-			throw new Error("No PANORA_API_KEY in config")
-		}
-
-		const res = await axios.post(
-			url,
-			{},
-			{
-				headers: {
-					"x-api-key": panoraApiKey,
-				},
-			}
+		const response = await getSwapDetails(
+			agent,
+			fromToken,
+			toToken,
+			swapAmount,
+			toWalletAddress || agent.account.getAddress().toString(),
+			validateSkipFees
 		)
-		const response = await res.data
 
 		if (response.quotes.length <= 0) {
 			throw new Error("no quotes available from panora")
@@ -49,16 +34,14 @@ export async function swapWithPanora(
 
 		const transactionData = response.quotes[0].txData
 
-		const transaction = await agent.aptos.transaction.build.simple({
-			sender: agent.account.getAddress(),
+		const committedTransactionHash = await agent.account.sendTransaction({
+			sender: agent.account.getAddress().toString(),
 			data: {
 				function: transactionData.function,
 				typeArguments: transactionData.type_arguments,
 				functionArguments: transactionData.arguments,
 			},
 		})
-
-		const committedTransactionHash = await agent.account.sendTransaction(transaction)
 
 		const signedTransaction = await agent.aptos.waitForTransaction({
 			transactionHash: committedTransactionHash,

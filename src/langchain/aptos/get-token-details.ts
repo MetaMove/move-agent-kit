@@ -1,5 +1,6 @@
 import { Tool } from "langchain/tools"
 import { type AgentRuntime, parseJson } from "../.."
+import { AGENT_CLIENT_MODE } from "../../constants"
 
 export class AptosGetTokenDetailTool extends Tool {
 	name = "aptos_token_details"
@@ -14,9 +15,18 @@ export class AptosGetTokenDetailTool extends Tool {
 		super()
 	}
 
-	protected async _call(input: string): Promise<string> {
+	protected async _call(input: string) {
 		try {
 			const parsedInput = parseJson(input)
+
+			if (AGENT_CLIENT_MODE) {
+				return {
+					name: this.name,
+					args: Object.values(parsedInput),
+					onchain: true,
+				}
+			}
+
 			const mint = parsedInput.token || ""
 
 			const tokenData = await this.agent.getTokenDetails(mint)

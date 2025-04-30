@@ -8,6 +8,7 @@ import {
 	AptosGetTokenDetailTool,
 	AptosGetTokenPriceTool,
 	AptosMintTokenTool,
+	AptosTransactionHistoryTool,
 	AptosTransactionTool,
 	AptosTransferTokenTool,
 } from "./aptos"
@@ -38,13 +39,20 @@ import {
 } from "./echelon"
 import { EchoStakeTokenTool, EchoUnstakeTokenTool } from "./echo"
 import {
+	EmojicoinGetMarketTool,
+	EmojicoinProvideLiquidityTool,
+	EmojicoinRegisterMarketTool,
+	EmojicoinRemoveLiquidityTool,
+	EmojicoinSwapTool,
+} from "./emojicoin"
+import {
 	MerkleTradeClosePositionTool,
 	MerkleTradeGetPositionTool,
 	MerkleTradePlaceLimitOrderTool,
 	MerkleTradePlaceMarketOrderTool,
 } from "./merkletrade"
 import { OpenAICreateImageTool } from "./openai"
-import { PanoraSwapTool } from "./panora"
+import { PanoraListTool, PanoraSwapTool } from "./panora"
 import {
 	ThalaAddLiquidityTool,
 	ThalaMintMODTool,
@@ -65,6 +73,7 @@ export const createAptosTools = (agent: AgentRuntime, config: { filter?: ToolsNa
 		new AptosBurnTokenTool(agent),
 		// new AptosTransferNFTTool(agent),
 		new AptosTransactionTool(agent),
+		new AptosTransactionHistoryTool(agent),
 		new AptosGetTokenDetailTool(agent),
 		new AptosMintTokenTool(agent),
 		new AptosCreateTokenTool(agent),
@@ -102,6 +111,7 @@ export const createAptosTools = (agent: AgentRuntime, config: { filter?: ToolsNa
 		new ThalaCreatePoolTool(agent),
 		// Panora tools
 		new PanoraSwapTool(agent),
+		new PanoraListTool(agent),
 		// OpenAI tools
 		new OpenAICreateImageTool(agent),
 		// Echo tools
@@ -117,6 +127,12 @@ export const createAptosTools = (agent: AgentRuntime, config: { filter?: ToolsNa
 		new MerkleTradeGetPositionTool(agent),
 		new MerkleTradePlaceLimitOrderTool(agent),
 		new MerkleTradePlaceMarketOrderTool(agent),
+		// Emojicoin Tools
+		new EmojicoinGetMarketTool(agent),
+		new EmojicoinProvideLiquidityTool(agent),
+		new EmojicoinRegisterMarketTool(agent),
+		new EmojicoinRemoveLiquidityTool(agent),
+		new EmojicoinSwapTool(agent),
 	]
 
 	return config.filter ? tools.filter((tool) => config?.filter?.includes(tool.name as ToolsNameList)) : tools
@@ -133,3 +149,4 @@ export * from "./liquidswap"
 export * from "./panora"
 export * from "./openai"
 export * from "./thala"
+export * from "./emojicoin"

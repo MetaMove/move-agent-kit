@@ -18,8 +18,8 @@ export async function addLiquidity(
 	mintYAmount: number
 ): Promise<string> {
 	try {
-		const transaction = await agent.aptos.transaction.build.simple({
-			sender: agent.account.getAddress(),
+		const committedTransactionHash = await agent.account.sendTransaction({
+			sender: agent.account.getAddress().toString(),
 			data: {
 				function: "0x9dd974aea0f927ead664b9e1c295e4215bd441a9fb4e53e5ea0bf22f356c8a2b::router::add_liquidity_v05",
 				typeArguments: [
@@ -35,8 +35,6 @@ export async function addLiquidity(
 				],
 			},
 		})
-
-		const committedTransactionHash = await agent.account.sendTransaction(transaction)
 
 		const signedTransaction = await agent.aptos.waitForTransaction({
 			transactionHash: committedTransactionHash,

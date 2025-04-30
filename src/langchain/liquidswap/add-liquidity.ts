@@ -1,6 +1,7 @@
 import { convertAmountFromHumanReadableToOnChain } from "@aptos-labs/ts-sdk"
 import { Tool } from "langchain/tools"
 import { type AgentRuntime, parseJson } from "../.."
+import { AGENT_CLIENT_MODE } from "../../constants"
 import { getTokenByTokenName } from "../../utils/get-pool-address-by-token-name"
 import { parseFungibleAssetAddressToWrappedAssetAddress } from "../../utils/parse-fungible-asset-to-wrapped-asset"
 
@@ -26,9 +27,17 @@ export class LiquidSwapAddLiquidityTool extends Tool {
 		super()
 	}
 
-	protected async _call(input: string): Promise<string> {
+	protected async _call(input: string) {
 		try {
 			const parsedInput = parseJson(input)
+
+			if (AGENT_CLIENT_MODE) {
+				return {
+					name: this.name,
+					args: Object.values(parsedInput),
+					onchain: true,
+				}
+			}
 
 			// Resolve token names to addresses
 			let mintX = parsedInput.mintX

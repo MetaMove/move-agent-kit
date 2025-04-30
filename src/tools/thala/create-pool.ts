@@ -35,8 +35,8 @@ export async function createPoolWithThala(
 
 		const typeArgs = [isCoinX ? mintX : NOTACOIN, isCoinY ? mintY : NOTACOIN, NOTACOIN, NOTACOIN, NOTACOIN, NOTACOIN]
 
-		const transaction = await agent.aptos.transaction.build.simple({
-			sender: agent.account.getAddress(),
+		const committedTransactionHash = await agent.account.sendTransaction({
+			sender: agent.account.getAddress().toString(),
 			data: {
 				function:
 					"0x007730cd28ee1cdc9e999336cbc430f99e7c44397c0aa77516f6f23a78559bb5::coin_wrapper::create_pool_stable",
@@ -44,8 +44,6 @@ export async function createPoolWithThala(
 				functionArguments: functionArgs,
 			},
 		})
-
-		const committedTransactionHash = await agent.account.sendTransaction(transaction)
 
 		const signedTransaction = await agent.aptos.waitForTransaction({
 			transactionHash: committedTransactionHash,

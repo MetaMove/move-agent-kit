@@ -1,6 +1,7 @@
 import { convertAmountFromHumanReadableToOnChain } from "@aptos-labs/ts-sdk"
 import { Tool } from "langchain/tools"
 import type { AgentRuntime } from "../../agent"
+import { AGENT_CLIENT_MODE } from "../../constants"
 import { parseJson } from "../../utils"
 export class EchoUnstakeTokenTool extends Tool {
 	name = "echo_unstake_token"
@@ -14,9 +15,17 @@ export class EchoUnstakeTokenTool extends Tool {
 		super()
 	}
 
-	protected async _call(input: string): Promise<string> {
+	protected async _call(input: string) {
 		try {
 			const parsedInput = parseJson(input)
+
+			if (AGENT_CLIENT_MODE) {
+				return {
+					name: this.name,
+					args: Object.values(parsedInput),
+					onchain: true,
+				}
+			}
 
 			const unstakeTransactionHash = await this.agent.unstakeTokenWithEcho(
 				convertAmountFromHumanReadableToOnChain(parsedInput.amount, 8)

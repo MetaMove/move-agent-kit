@@ -1,6 +1,7 @@
 import { AccountAddress } from "@aptos-labs/ts-sdk"
 import { Tool } from "langchain/tools"
 import { type AgentRuntime, parseJson } from "../.."
+import { AGENT_CLIENT_MODE } from "../../constants"
 
 export class AptosMintTokenTool extends Tool {
 	name = "aptos_mint_token"
@@ -18,13 +19,21 @@ if the recipient wants to receive the token and not send to anybody else, keep t
 		super()
 	}
 
-	protected async _call(input: string): Promise<string> {
+	protected async _call(input: string) {
 		try {
 			const parsedInput = parseJson(input)
 
+			if (AGENT_CLIENT_MODE) {
+				return {
+					name: this.name,
+					args: Object.values(parsedInput),
+					onchain: true,
+				}
+			}
+
 			const mintDetail = await this.agent.getTokenDetails(parsedInput.mint)
 
-			const recipient = AccountAddress.from(parsedInput.to) || this.agent.account.getAddress()
+			const recipient = AccountAddress.from(parsedInput.to) || this.agent.account.getAddress().toString()
 			const mintTokenTransactionHash = await this.agent.mintToken(recipient, parsedInput.mint, parsedInput.amount)
 
 			return JSON.stringify({

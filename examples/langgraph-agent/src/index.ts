@@ -1,10 +1,10 @@
+import { HumanMessage } from "@langchain/core/messages"
 import { END, START, StateGraph } from "@langchain/langgraph"
 import { aptosReadNode } from "./agents/aptos-read-agent"
 import { managerNode, managerRouter } from "./agents/manager"
 import { writerNode, writerTool } from "./agents/tweet-writer-agent"
 import { postNode, postOnXTool } from "./agents/x-post-agent"
 import { StateAnnotation } from "./state"
-import { HumanMessage } from "@langchain/core/messages"
 
 const workflow = new StateGraph(StateAnnotation)
 	.addNode("manager", managerNode)
@@ -23,8 +23,8 @@ const workflow = new StateGraph(StateAnnotation)
 
 export const graph = workflow.compile()
 
-graph.invoke({
-	messages: [
-		new HumanMessage("what is my address?")
-	]
-}).then(x => console.log(x))
+graph
+	.invoke({
+		messages: [new HumanMessage("what is my address?")],
+	})
+	.then((x) => console.log(x))

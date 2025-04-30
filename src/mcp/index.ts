@@ -2,7 +2,7 @@ import { McpServer } from "@modelcontextprotocol/sdk/server/mcp.js"
 import { StdioServerTransport } from "@modelcontextprotocol/sdk/server/stdio.js"
 import { z } from "zod"
 import type { AgentRuntime } from "../agent"
-import { processMoveSchema } from "../utils/mcp-schema"
+import { type MoveSchemaShape, processMoveSchema } from "../utils/mcp-schema"
 
 /**
  * Creates an MCP server from a AgentRuntime
@@ -40,7 +40,7 @@ export function createMcpServer(
 				continue
 			}
 
-			let schema
+			let schema: z.ZodTypeAny
 			try {
 				schema = z.object(tool.schema.shape || {})
 			} catch (schemaError) {
@@ -48,7 +48,7 @@ export function createMcpServer(
 				schema = z.object({})
 			}
 
-			let shape
+			let shape: MoveSchemaShape
 			try {
 				const processed = processMoveSchema(schema)
 				shape = processed.shape
@@ -174,7 +174,6 @@ export async function startMcpServer(
 		//console.log("MCP server connected to transport");
 		return server
 	} catch (error) {
-		//console.error("Error starting Move MCP server:", error);
-		throw error
+		throw new Error(`Error starting Move MCP server: ${error}`)
 	}
 }
