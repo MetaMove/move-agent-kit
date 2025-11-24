@@ -3,6 +3,11 @@ import { AptosPriceServiceConnection } from "@pythnetwork/pyth-aptos-js"
 import { priceFeed } from "./constants/price-feed"
 import type { BaseSigner } from "./signers"
 import {
+    Chain,
+    Network,
+    TokenId,
+  } from "@wormhole-foundation/sdk";
+import {
 	borrowToken,
 	burnNFT,
 	burnToken,
@@ -56,6 +61,8 @@ import {
 	stakeTokenWithThala,
 	unstakeAPTWithThala,
 } from "./tools/thala"
+import {transferUsdcWithCctp, createAptosWrappedToken,getSupportedWormholeChains, tokenTransfer} from "./tools/wormhole"
+import {buyOpenRouterCredits} from "./tools/open-router"
 import { getTokenByTokenName } from "./utils/get-pool-address-by-token-name"
 
 export class AgentRuntime {
@@ -295,5 +302,42 @@ export class AgentRuntime {
 
 	getPositionsWithMerkleTrade() {
 		return getPositionsWithMerkleTrade(this)
+	}
+
+	// Wormhole
+	transferUsdcWithCctp(targetChain: Chain, transferAmount: string, networkType: Network) {
+		return transferUsdcWithCctp({
+			targetChain,
+			transferAmount,
+			networkType
+		})
+	}
+
+	createAptosWrappedToken(targetChain: Chain, tokenAddress: string, networkType: Network) {
+		return createAptosWrappedToken({
+			targetChain,
+			originTokenAddress: tokenAddress,
+			networkType
+		})
+	}
+
+	getSupportedWormholeChains() {
+		return getSupportedWormholeChains()
+	}
+	
+	tokenTransfer(targetChain: Chain, transferAmount: string, networkType: Network, tokenAddress?: string) {
+		return tokenTransfer({
+			targetChain,
+			transferAmount,
+			networkType,
+			tokenAddress
+		})
+	}
+	//oper-router
+	buyOpenRouterCredits(amountUsd: number, networkType: Network){
+		return buyOpenRouterCredits(
+			this,
+			{ amountUsd, networkType }
+		)
 	}
 }

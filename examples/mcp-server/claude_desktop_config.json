@@ -1,9 +1,9 @@
 {
-    "mcpServers": {
-      "agent-kit": {
-        "command": "/Users/nisargthakkar/move-agent-kit/examples/mcp-server/run-server.sh",
-        "env": {},
-        "args": []
-      }
+  "mcpServers": {
+    "agent-kit": {
+      "command": "/bin/bash",
+      "args": ["/Users/nisargthakkar/kit/move-agent-kit/examples/mcp-server/run-server.sh"],
+      "env": {}
     }
   }
+}

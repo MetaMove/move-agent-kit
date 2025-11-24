@@ -7,7 +7,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "tsc ",
     "start": "node dist/index.js",
-    "dev": "ts-node --transpile-only src/index.ts"
+    "dev": "ts-node --transpile-only src/index.ts",
+    "tools": "ts-node --transpile-only src/tools.ts"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +16,7 @@
   "packageManager": "pnpm@10.5.2",
   "dependencies": {
     "dotenv": "^16.4.7",
+    "sdk": "link:@wormhole-foundation/sdk",
     "ts-node": "^10.9.2"
   }
 }

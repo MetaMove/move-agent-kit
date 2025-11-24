@@ -46,6 +46,3 @@ next-env.d.ts
 
 # TypeScript declaration files
 **/*.d.ts
-
-# Ignore the script
-run-server.sh

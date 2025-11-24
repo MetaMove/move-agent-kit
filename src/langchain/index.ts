@@ -54,6 +54,8 @@ import {
 	ThalaUnstakeTokenTool,
 } from "./thala"
 import { ThalaCreatePoolTool } from "./thala/create-pool"
+import {CctpTransferTool, CreateWrappedTokenTool, GetWormholeSupportedChainsTool,TokenTransferTool} from "./wormhole"
+import {BuyOpenRouterCreditsTool} from "./open-router"
 
 export const createAptosTools = (agent: AgentRuntime, config: { filter?: ToolsNameList[] } = {}) => {
 	const tools = [
@@ -117,6 +119,13 @@ export const createAptosTools = (agent: AgentRuntime, config: { filter?: ToolsNa
 		new MerkleTradeGetPositionTool(agent),
 		new MerkleTradePlaceLimitOrderTool(agent),
 		new MerkleTradePlaceMarketOrderTool(agent),
+		// Wormhole tools
+		new CctpTransferTool(agent),
+		new CreateWrappedTokenTool(agent),
+		new GetWormholeSupportedChainsTool(agent),
+		new TokenTransferTool(agent),
+		// OpenRouter tools
+		new BuyOpenRouterCreditsTool(agent),
 	]
 
 	return config.filter ? tools.filter((tool) => config?.filter?.includes(tool.name as ToolsNameList)) : tools
@@ -133,3 +142,5 @@ export * from "./liquidswap"
 export * from "./panora"
 export * from "./openai"
 export * from "./thala"
+export * from "./wormhole"
+export * from "./open-router"

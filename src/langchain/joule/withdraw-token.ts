@@ -6,7 +6,7 @@ export class JouleWithdrawTokenTool extends Tool {
 	name = "joule_withdraw_token"
 	description = `this tool can be used to withdraw APT, tokens or fungible asset from a position
 
-  if you want to withdraw APT, add "0x1::aptos_coin::AptosCoin" as mint
+  if you want to withdraw APT, add "0x1::aptos_coin::AptosCoin" as mint if anyone just write aptos or apt take "0x1::aptos_coin::AptosCoin" as mint
   if you want to withdraw token other than APT, you need to provide the mint of that specific token
   if you want to withdraw fungible asset, add "0x1::aptos_coin::AptosCoin" as mint and provide fungible asset address
   

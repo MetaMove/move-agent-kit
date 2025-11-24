@@ -30,7 +30,7 @@ export function createMcpServer(
 		return server
 	}
 
-	console.log(`Found ${tools.length} tools to register with MCP server`)
+	//console.log(`Found ${tools.length} tools to register with MCP server`)
 
 	// Convert each tool to an MCP tool
 	for (const tool of tools) {
