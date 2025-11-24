@@ -77,7 +77,7 @@ export const transferUsdcWithCctp = async (
       //console.log(`Destination signer created: ${destSigner.address.address.toString()}`);
       
       // Parse USDC amount with 6 decimal precision
-      const amt = 1_000_000n;
+      const amt = amount.units(amount.parse(transferAmount, 6));
       //console.log(`Transfer amount: ${transferAmount} USDC (${amt} base units)`);
       
       // Calculate native gas amount for automatic transfers (if enabled)

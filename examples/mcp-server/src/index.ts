@@ -53,7 +53,7 @@ export async function main() {
     const tools = [
         new DynamicStructuredTool({
             name: "get_balance",
-            description: "Get the balance of a token if no token is provided, it will return the balance of the APT. Divide the balance by 10^6 to get the human readable balance for usdc which is 0xbae207659db88bea0cbead6da0ed00aac12edcdda169e591cd41c94180b46f3b address token.",
+            description: "Get the balance of a token if no token is provided, it will return the balance of the APT and divide it by 10^8 for aptos or apt. The balance for usdc which is 0xbae207659db88bea0cbead6da0ed00aac12edcdda169e591cd41c94180b46f3b address token is divided by 10^6.",
             schema: z.object({
                 mint: z.string().optional()
             }),
